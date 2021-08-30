@@ -8,6 +8,7 @@ import java.util.Objects;
 
 public class LinkedListCrud {
     public static Node head;
+    public static Node left;
     public static class Node {
         public int val;
 
@@ -71,6 +72,100 @@ public class LinkedListCrud {
         // swap two nodes without swapping data
         swapNodes(5, 4);
 
+        // check if linkedList is palindrome or not   - VVI
+        left = head;
+        if(checkIfPalindrome(head)) {
+            System.out.println("LL is palindrome");
+        } else {
+            System.out.println("LL is not palindrome");
+        }
+        head = null;
+        insertAtEnd(1);
+        insertAtEnd(2);
+        insertAtEnd(3);
+        insertAtEnd(2);
+        insertAtEnd(1);
+        printLL();
+        left = head;
+        if(checkIfPalindrome(head)) {
+            System.out.println("LL is palindrome");
+        } else {
+            System.out.println("LL is not palindrome");
+        }
+
+        // intersection point of two Linked Lists
+        findIntersectionPoint();
+
+        // Segregate even and odd nodes in a Linked List - VVI
+        segregateOddEvenNodes();
+
+        // reverse a LL - VVVVVVVI
+        head = null;
+        insertAtEnd(1);
+        insertAtEnd(2);
+        insertAtEnd(3);
+        insertAtEnd(4);
+        insertAtEnd(5);
+        System.out.println("Reversing LL...");
+        printLL();
+        reverse();
+        printLL();
+
+    }
+
+    private static void reverse() {
+        // Approach : Reverse Link and make head as last of the LL
+        Node prev = null;
+        Node current = head;
+        Node nextNode;
+        while(Objects.nonNull(current)) {
+            nextNode = current.getNext();
+            current.setNext(prev);
+            prev = current;
+            current = nextNode;
+        }
+        head = prev;
+    }
+
+    private static void segregateOddEvenNodes() {
+//        The idea is to get pointer to the last node of list.
+//        And then traverse the list starting from the head node and move the odd valued nodes from their current position to end of the list.
+    }
+
+    private static void findIntersectionPoint() {
+        // find lengths of both LL, say l1 >= l2
+//        if(l1 == l2) head is intersection point
+//        else, say k = l1 - l2, ignore first k nodes of longest LL, and then start iterating both LLs, first node which are same is the intersection point
+
+
+//        or
+//        Using Two pointers :
+//
+//        Initialize two pointers ptr1 and ptr2  at the head1 and  head2.
+//        Traverse through the lists,one node at a time.
+//        When ptr1 reaches the end of a list, then redirect it to the head2.
+//                similarly, when ptr2 reaches the end of a list, redirect it the head1.
+//        Once both of them go through reassigning, they will be equidistant from
+//        the collision point
+//        If at any node ptr1 meets ptr2, then it is the intersection node.
+//        After second iteration if there is no intersection node it returns NULL.
+    }
+
+    private static boolean checkIfPalindrome(Node right) {
+        // 1. Store elements in stack and then check.
+        // 2. Reverse second half of LL and then compare first and second half, then restore by reversing second half again
+        // 3. Check recursively
+        if(Objects.isNull(right)) return true;
+
+        boolean checkSubList = checkIfPalindrome(right.next);
+
+        if(!checkSubList) return false;
+
+        boolean valueMatched = left.getVal() == right.getVal();
+
+        left = left.getNext();
+
+        return valueMatched;
     }
 
     private static void swapNodes(int i, int i1) {
@@ -142,6 +237,12 @@ public class LinkedListCrud {
     }
 
     private static void insertAtEnd(int i) {
+        if(Objects.isNull(head)) {
+            head = new Node();
+            head.setVal(i);
+            head.setNext(null);
+            return;
+        }
         Node temp = head;
         while(Objects.nonNull(temp.getNext())) {
             temp = temp.getNext();
