@@ -1,0 +1,43 @@
+It should provide,
+
+A configurable option for other application modules to save logs at more than one platform like, on Console, in txt files or on network etc.
+A Facility to Log messages in different categories like, ERROR, WARNING, GENERAL_MESSAGES and also provision to control each category independently.
+A Facility to configure & bind category and Logging platform at run time i.e. user will be able to specify at runtime that,
+Messages of any particular category should be logged or not etc.
+Messages of any particular category like ERROR should be logged in error.txt and remaining categories on console only etc.
+
+
+Mainly two components exists in it,
+
+1. Logger
+
+Its an interface layer between application and actual logging platforms.
+
+Responsibilities:
+
+Responsible for receiving different type of log messages like ERROR, WARNING & GENERAL etc from application.
+Manages a registry map of Logging Platforms based on message types.
+Provides a mechanism to attach and de-attach Logging Platforms with different message types at runtime.
+On Receiving message from application, fetches the type of message and then forwards the message to the Logging Platforms registered with that message type.
+
+2. Logging Platform
+
+It actually logs the message in its platform. There can be multiple logging platform.
+
+Like,
+
+Console Platform:   It prints the message on console.
+
+Flat File Platform:   It writes the message in attached txt file.
+
+Network Platform:   It forwards the message on network.
+
+This is a perfect example of Observer Design Pattern.
+
+Intent of Observer Design Pattern:
+
+Define a one-to-many dependency between objects so that when one object changes state, all its dependents are notified and updated automatically.
+
+Here, Logger is SUBJECT and Logging Platforms are OBSERVERS. It decouples the sender and receivers i.e it decouples the different Application modules and actual logging platforms.
+
+Logging Platforms registers itself with the Subject (i.e. Logger) on the basis of message types and when Logger (i.e. Subject) receives any message it notifies the Platforms registered with that message type by forwarding the message. Then those platforms take action on that message.
