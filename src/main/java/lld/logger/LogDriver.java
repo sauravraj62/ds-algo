@@ -5,7 +5,7 @@ import lld.logger.publisher.FileLogger;
 import lld.logger.publisher.NetworkLogger;
 
 public class LogDriver {
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         LoggerClient loggerClient = new LoggerClient();
         loggerClient.attachPublisher(Severity.INFO, new ConsoleLogger());
         loggerClient.attachPublisher(Severity.INFO, new FileLogger("newFile"));
