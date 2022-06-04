@@ -8,85 +8,127 @@ public class LinkedListCrud {
     }
 
     public static void main(String[] args) {
+        // inserting data at beginning
         printLL(head);
-
-        // inserting data at the beginning
         insertDataAtBeginning(5);
         insertDataAtBeginning(4);
         insertDataAtBeginning(7);
         printLL(head);
 
-        // inserting data at the end
+        // inserting data at end
         insertDataAtEnd(10);
         insertDataAtEnd(12);
         printLL(head);
-
         // inserting data in between
         insertData(5, 20);
         printLL(head);
 
-        // reverse LL
-        reverseLL();
-        printLL(head);
-
-        // find Middle
-        findMiddle();
-        deleteNode(5);
-        findMiddle();
-        printLL(head);
-
-        // delete a node
-        deleteNode(12);
-        printLL(head);
+        // deleting data
         deleteNode(7);
         printLL(head);
-
-        // inserting more element and then we'll make a loop in LL
-        insertDataAtEnd(15);
-        insertDataAtEnd(20);
-        insertDataAtEnd(25);
-        insertDataAtEnd(30);
-        insertDataAtEnd(35);
-        insertDataAtEnd(40);
-        insertDataAtEnd(45);
+        deleteNode(20);
         printLL(head);
-        Node fifthNode = findExistingNode(20);
-        Node lastNode = findExistingNode(45);
-        initiateLoop(fifthNode, lastNode);
-        Node nodeInLoop = detectLoopInLL();
-        findLengthOfLoop(nodeInLoop);
+        deleteNode(100);
+        printLL(head);
+        insertDataAtEnd(14);
+        insertDataAtEnd(16);
+        insertDataAtEnd(18);
+
+
+        // reverse a LL
+        System.out.println("LL before reversing : ");
+        printLL(head);
+        reverseLL();
+        System.out.println("LL after reversing : ");
+        printLL(head);
+
+        // find middle
+        findMiddle();
+        insertDataAtEnd(2);
+        printLL(head);
+        findMiddle();
+
+        // find loop, remove loop, find length of loop
+
+        Node lastNode = findExistingNode(2);
+        Node middleNode = findExistingNode(12);
+
+        initiateLoop(lastNode, middleNode);
+        Node nodeInsideTheLoop = detectLoop();
+        int lengthOfLoop = findLengthIfLoop(nodeInsideTheLoop);
+        removeLoop(lengthOfLoop);
+        printLL(head);
+        Node currentNode = head;
+        printReverseWithoutReversing(currentNode);
+        System.out.println();
     }
 
-    private static void findLengthOfLoop(Node nodeInLoop) {
-        if(nodeInLoop != null) {
-            int length = 1;
-            Node current = nodeInLoop.nextNode;
-            while(current != nodeInLoop) {
-                current = current.nextNode;
-                length++;
-            }
-            System.out.println("Length of loop : " + length);
+    private static void printReverseWithoutReversing(Node currentNode) {
+        if(currentNode == null) {
+            return;
         }
+        printReverseWithoutReversing(currentNode.nextNode);
+        System.out.print(currentNode.data + " ");
     }
 
-    private static Node detectLoopInLL() {
+    private static void removeLoop(int lengthOfLoop) {
+        Node firstPointer = head;
+        Node secondPointer = findNodeAtDistance(lengthOfLoop);
+        while(secondPointer.nextNode != firstPointer) {
+            firstPointer = firstPointer.nextNode;
+            secondPointer = secondPointer.nextNode;
+        }
+        secondPointer.nextNode = null;
+    }
+
+    private static Node findNodeAtDistance(int distance) {
+        Node current = head;
+        distance--;
+        while (distance != 0) {
+            distance--;
+            current = current.nextNode;
+        }
+        return current;
+    }
+
+    private static int findLengthIfLoop(Node nodeInsideTheLoop) {
+        if(nodeInsideTheLoop == null) {
+            System.out.println("Loop doesn't exists.");
+            return 0;
+        }
+        Node currentNode = nodeInsideTheLoop.nextNode;
+        int length = 1;
+        while(currentNode != nodeInsideTheLoop) {
+            length++;
+            currentNode = currentNode.nextNode;
+        }
+        System.out.println("Length of Loop : " + length);
+        return length;
+    }
+
+    private static Node detectLoop() {
+        if(head == null) {
+            System.out.println("LinkedList is empty");
+            return null;
+        }
         Node slow = head;
         Node fast = head.nextNode;
-        while(slow != null && fast != null && fast.nextNode!= null && slow != fast) {
+        while(fast != null && fast.nextNode != null && slow != fast) {
             slow = slow.nextNode;
             fast = fast.nextNode.nextNode;
         }
+
         if(slow != null && slow == fast) {
-            System.out.println("Loop detected.");
+            System.out.println("Loop detected in Linked List.");
             return slow;
         } else {
-            System.out.println("Loop not exists.");
+            System.out.println("Loop doesn't exists in LinkedList.");
             return null;
         }
     }
 
-    private static void initiateLoop(Node fifthNode, Node lastNode) {
-        lastNode.nextNode = fifthNode;
+    private static void initiateLoop(Node lastNode, Node middleNode) {
+        lastNode.nextNode = middleNode;
     }
 
     private static void findMiddle() {
@@ -94,6 +136,7 @@ public class LinkedListCrud {
             System.out.println("LL is empty");
             return;
         }
+
         Node slow = head;
         Node fast = head.nextNode;
         while(fast != null && fast.nextNode != null) {
@@ -103,29 +146,10 @@ public class LinkedListCrud {
         System.out.println("Middle element : " + slow.data);
     }
 
-    private static void deleteNode(int dataToBeDeleted) {
-        Node current = head;
-        Node prev = null;
-        if(current != null && current.data == dataToBeDeleted) {
-            head = current.nextNode;
-            return;
-        }
-        while(current != null && current.data != dataToBeDeleted) {
-            prev = current;
-            current = current.nextNode;
-        }
-
-        if(current == null) {
-            System.out.println("No such element exists in LL");
-            return;
-        }
-        prev.nextNode = current.nextNode;
-    }
-
     private static void reverseLL() {
+        Node current = head;
         Node prev = null;
         Node nextOfCurrentNode;
-        Node current = head;
         while(current != null) {
             nextOfCurrentNode = current.nextNode;
             current.nextNode = prev;
@@ -133,6 +157,24 @@ public class LinkedListCrud {
             current = nextOfCurrentNode;
         }
         head = prev;
+    }
+
+    private static void deleteNode(int dataToBeDeleted) {
+        Node currentNode = head;
+        Node prevNode = null;
+        if(currentNode != null && currentNode.data == dataToBeDeleted) {
+            head = currentNode.nextNode;
+            return;
+        }
+        while(currentNode != null && currentNode.data != dataToBeDeleted) {
+            prevNode = currentNode;
+            currentNode = currentNode.nextNode;
+        }
+        if(currentNode == null) {
+            System.out.println("No such node exists : " + dataToBeDeleted);
+            return;
+        }
+        prevNode.nextNode = currentNode.nextNode;
     }
 
     private static void insertData(int existingData, int insertingData) {
