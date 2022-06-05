@@ -1,4 +1,4 @@
-package dataStructures.algorithms.searchingAlgorithms;
+package algorithms.searchingAlgorithms;
 
 import java.util.*;
 
